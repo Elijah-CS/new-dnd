@@ -5,7 +5,7 @@ import {
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 
-import SortableItem from "./sortable_item";
+import SortableItem from "./SortableItem";
 
 const containerStyle = {
   background: "#dadada",
@@ -14,7 +14,12 @@ const containerStyle = {
   flex: 1
 };
 
-export default function Container(props) {
+interface ContainerProps {
+  id: string;
+  items: string[];
+}
+
+export default function Container(props: ContainerProps) {
   const { id, items } = props;
 
   const { setNodeRef } = useDroppable({id});

@@ -2,7 +2,11 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export function Item(props) {
+interface ItemProps {
+  id : string
+}
+
+export function Item(props: ItemProps) {
   const { id } = props;
 
   const style = {
@@ -19,7 +23,11 @@ export function Item(props) {
   return <div style={style}>{id}</div>;
 }
 
-export default function SortableItem(props) {
+interface SortableProps {
+  id : string
+}
+
+export default function SortableItem(props: SortableProps) {
   const {
     attributes,
     listeners,

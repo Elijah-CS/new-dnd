@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, CSSProperties} from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -7,52 +7,63 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+  Announcements
 } from '@dnd-kit/core';
 import {arrayMove, sortableKeyboardCoordinates} from '@dnd-kit/sortable';
 
-import Container from './container';
-import {Item} from './sortable_item';
+import Container from './Container';
+import {Item} from './SortableItem';
 
-const wrapperStyle = {
+const wrapperStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
 };
 
-const defaultAnnouncements = {
-  onDragStart(id) {
+const defaultAnnouncements: Announcements = {
+  onDragStart(id:string) {
     console.log(`Picked up draggable item ${id}.`);
+    return undefined
   },
-  onDragOver(id, overId) {
+  onDragOver(id:string, overId:string) {
     if (overId) {
       console.log(
         `Draggable item ${id} was moved over droppable area ${overId}.`,
       );
-      return;
+      return undefined;
     }
 
     console.log(`Draggable item ${id} is no longer over a droppable area.`);
+    return undefined
   },
-  onDragEnd(id, overId) {
+  onDragEnd(id: string, overId: string) {
     if (overId) {
       console.log(
         `Draggable item ${id} was dropped over droppable area ${overId}`,
       );
-      return;
+      return undefined;
     }
 
     console.log(`Draggable item ${id} was dropped.`);
   },
-  onDragCancel(id) {
+  onDragCancel(id: string) {
     console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
+    return undefined
   },
 };
 
-export default function App() {
-  const [items, setItems] = useState({
-    list1: [...Array(10).keys()].map((i) => `A${i}`),
+interface ItemProps {
+    [key: string]: string[]
+}
+
+function App() {
+  const [items, setItems] = useState<ItemProps>({
+    list1: ["A1","A2","A3","A4","A5","A6","A7",],
     list2: [],
   });
-  const [activeId, setActiveId] = useState();
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -78,7 +89,7 @@ export default function App() {
     </div>
   );
 
-  function findContainer(id) {
+  function findContainer(id: string) {
     if (id in items) {
       return id;
     }
@@ -86,17 +97,22 @@ export default function App() {
     return Object.keys(items).find((key) => items[key].includes(id));
   }
 
-  function handleDragStart(event) {
+  function handleDragStart(event: DragStartEvent) {
     const {active} = event;
     const {id} = active;
 
     setActiveId(id);
   }
 
-  function handleDragOver(event) {
-    const {active, over, draggingRect} = event;
-    const {id} = active;
-    const {id: overId} = over;
+  function handleDragOver(event: DragOverEvent) {
+    const {active, over} = event;
+
+    if (!active || !over) {
+      return
+    }
+
+    const id = active.id;
+    const overId: string = over.id;
 
     // Find the containers
     const activeContainer = findContainer(id);
@@ -123,14 +139,15 @@ export default function App() {
         // We're at the root droppable of a container
         newIndex = overItems.length + 1;
       } else {
-        const isBelowLastItem =
-          over &&
-          overIndex === overItems.length - 1 &&
-          draggingRect?.offsetTop > over.rect.offsetTop + over.rect.height;
+        // const isBelowLastItem =
+        //   over &&
+        //   overIndex === overItems.length - 1 &&
+        //   draggingRect?.offsetTop > over.rect.offsetTop + over.rect.height;
 
-        const modifier = isBelowLastItem ? 1 : 0;
+        // const modifier = isBelowLastItem ? 1 : 0;
 
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        // newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        newIndex = overIndex >= 0 ? overIndex : overItems.length + 1;
       }
 
       return {
@@ -147,10 +164,15 @@ export default function App() {
     });
   }
 
-  function handleDragEnd(event) {
+  function handleDragEnd(event: DragEndEvent) {
     const {active, over} = event;
-    const {id} = active;
-    const {id: overId} = over;
+
+    if (!active || !over) {
+      return
+    }
+
+    const id = active.id;
+    const overId: string = over.id;
 
     const activeContainer = findContainer(id);
     const overContainer = findContainer(overId);
@@ -180,3 +202,5 @@ export default function App() {
     setActiveId(null);
   }
 }
+
+export default App;
