@@ -1,0 +1,6 @@
+.item {
+  user-select: none;
+  text-align: center;
+
+  cursor: grab;
+}
