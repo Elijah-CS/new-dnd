@@ -3,11 +3,12 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface ItemProps {
-  id : string
+  id : string,
+  opacity?: string
 }
 
 export function Item(props: ItemProps) {
-  const { id } = props;
+  const { id, opacity="1" } = props;
 
   const style = {
     width: "100%",
@@ -17,7 +18,8 @@ export function Item(props: ItemProps) {
     justifyContent: "center",
     border: "1px solid black",
     margin: "10px 0",
-    background: "white"
+    background: "white",
+    opacity: opacity
   };
 
   return <div style={style}>{id}</div>;
@@ -33,7 +35,8 @@ export default function SortableItem(props: SortableProps) {
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = useSortable({ id: props.id });
 
   const style = {
@@ -41,9 +44,11 @@ export default function SortableItem(props: SortableProps) {
     transition
   };
 
+  const opacity = isDragging ? "0" : "1"
+
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Item id={props.id} />
+      <Item id={props.id} opacity={opacity} />
     </div>
   );
 }

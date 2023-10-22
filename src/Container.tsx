@@ -11,7 +11,8 @@ const containerStyle = {
   background: "#dadada",
   padding: 10,
   margin: 10,
-  flex: 1
+  flex: 1,
+  height: "600px"
 };
 
 interface ContainerProps {
