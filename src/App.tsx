@@ -9,8 +9,7 @@ import {
   useSensors,
   DragEndEvent,
   DragOverEvent,
-  DragStartEvent,
-  Announcements
+  DragStartEvent
 } from '@dnd-kit/core';
 import {arrayMove, sortableKeyboardCoordinates} from '@dnd-kit/sortable';
 
@@ -20,38 +19,6 @@ import {Item} from './SortableItem';
 const wrapperStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-};
-
-const defaultAnnouncements: Announcements = {
-  onDragStart(id:string) {
-    console.log(`Picked up draggable item ${id}.`);
-    return undefined
-  },
-  onDragOver(id:string, overId:string) {
-    if (overId) {
-      console.log(
-        `Draggable item ${id} was moved over droppable area ${overId}.`,
-      );
-      return undefined;
-    }
-
-    console.log(`Draggable item ${id} is no longer over a droppable area.`);
-    return undefined
-  },
-  onDragEnd(id: string, overId: string) {
-    if (overId) {
-      console.log(
-        `Draggable item ${id} was dropped over droppable area ${overId}`,
-      );
-      return undefined;
-    }
-
-    console.log(`Draggable item ${id} was dropped.`);
-  },
-  onDragCancel(id: string) {
-    console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
-    return undefined
-  },
 };
 
 interface ItemProps {
@@ -75,7 +42,6 @@ function App() {
   return (
     <div style={wrapperStyle}>
       <DndContext
-        announcements={defaultAnnouncements}
         sensors={sensors}
         collisionDetection={rectIntersection}
         onDragStart={handleDragStart}
@@ -101,7 +67,7 @@ function App() {
     const {active} = event;
     const {id} = active;
 
-    setActiveId(id);
+    setActiveId(id.toString());
   }
 
   function handleDragOver(event: DragOverEvent) {
@@ -112,10 +78,10 @@ function App() {
     }
 
     const id = active.id;
-    const overId: string = over.id;
+    const overId: string = over.id.toString();
 
     // Find the containers
-    const activeContainer = findContainer(id);
+    const activeContainer = findContainer(id.toString());
     const overContainer = findContainer(overId);
 
     if (
@@ -131,7 +97,7 @@ function App() {
       const overItems = prev[overContainer];
 
       // Find the indexes for the items
-      const activeIndex = activeItems.indexOf(id);
+      const activeIndex = activeItems.indexOf(id.toString());
       const overIndex = overItems.indexOf(overId);
 
       let newIndex;
@@ -172,9 +138,9 @@ function App() {
     }
 
     const id = active.id;
-    const overId: string = over.id;
+    const overId: string = over.id.toString();
 
-    const activeContainer = findContainer(id);
+    const activeContainer = findContainer(id.toString());
     const overContainer = findContainer(overId);
 
     if (
@@ -185,7 +151,7 @@ function App() {
       return;
     }
 
-    const activeIndex = items[activeContainer].indexOf(active.id);
+    const activeIndex = items[activeContainer].indexOf(active.id.toString());
     const overIndex = items[overContainer].indexOf(overId);
 
     if (activeIndex !== overIndex) {

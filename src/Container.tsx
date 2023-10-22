@@ -12,7 +12,8 @@ const containerStyle = {
   padding: 10,
   margin: 10,
   flex: 1,
-  height: "600px"
+  height: "300px",
+  overflow: "auto"
 };
 
 interface ContainerProps {
