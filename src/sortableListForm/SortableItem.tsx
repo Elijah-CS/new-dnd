@@ -44,9 +44,6 @@ export default function SortableItem(props: SortableProps) {
     transition
   };
 
-  // const opacity = isDragging ? "0" : "1"
-
-
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Item id={props.id} isDragging={isDragging} isOverlay={false} />

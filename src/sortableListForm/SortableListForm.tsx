@@ -82,18 +82,14 @@ function SortableListForm({allItems} : SortableListFormProps) {
       return
     }
 
-    const id = active.id;
-    const overId: string = over.id.toString();
+    const id = active.id; // id of item being dragged
+    const overId: string = over.id.toString(); // id of item OR container being dragged over
 
     // Find the containers
     const activeContainer = findContainer(id.toString());
     const overContainer = findContainer(overId);
 
-    if (
-      !activeContainer ||
-      !overContainer ||
-      activeContainer === overContainer
-    ) {
+    if (!activeContainer || !overContainer || activeContainer === overContainer) {
       return;
     }
 
